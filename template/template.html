@@ -1,0 +1,121 @@
+text/html; charset=utf-8
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+? use Data::Dumper;
+? use Text::MicroTemplate qw(encoded_string);
+? use DateTime;
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title></title>
+		
+		<!-- <script type="text/javascript" src="/site-script.js"></script> -->
+		<style type="text/css">
+
+			body {
+			background: #fff;
+			color: #555;
+			padding: 0 10%;
+			line-height: 1.75;
+			}
+
+			var {
+			text-decoration: underline;
+			color: #666;
+			}
+
+			hr {
+			border-style: solid;
+			border-width: 1px 0 0;
+			border-color: #eee;
+			height: 1px;
+			margin: 1em 0;
+			}
+
+			.all {
+			width: 45em;
+			}
+
+			a:link {
+			color: #d06c6b;
+			}
+
+			a:visited {
+			color: #b44e4d;
+			}
+
+			a:hover {
+			text-decoration: none;
+			}
+
+			h1, h2, h3 {
+			font-weight: normal;
+			}
+
+			.hentry {
+			border-top: 1px solid #ddd;
+			padding: 1em 0;
+			}
+
+			h3 {
+			color: #d06c6b;
+			margin: 0 0 1em 0;
+			}
+
+			dl.information {
+			margin: 0;
+			color: #ccc;
+			font-size: 80%;
+			text-align: right;
+			line-height: 1.33;
+			}
+
+			dt {
+			margin: 0 13em 0 0;
+			padding: 0;
+			}
+
+			dd {
+			overflow: hidden;
+			white-space: nowrap;
+			padding: 0;
+			margin: -1.33em 0 0 0;
+			}
+
+			#top a:link,
+			#top a:visited,
+			#top a:hover,
+			#top a {
+			text-decoration: none;
+			}
+
+			#footer {
+			font-size: 80%;
+			color: #999;
+			text-align: center;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="whole">
+			<h1 id="top"><a href="/"></a></h1>
+
+			<div id="content">
+				<? for my $entry (@{ $blosxom->{entries} }) { ?>
+				<div class="hentry">
+					<div class="entry-title"><?= $entry->title ?></div>
+					<div class="entry-content"><?= encoded_string($entry->body) ?></div>
+					<dl class="information">
+						<dt>DateTime</dt>
+						<dd><?= DateTime->from_epoch(epoch => $entry->time)->strftime("%Y-%m-%d") ?></dd>
+						<dt>Path</dt>
+						<dd><a href="<?= $entry->name ?>"><?= $entry->name ?></a></dd>
+					</dl>
+				</div>
+				<? } ?>
+			</div>
+
+			<div id="footer">
+			</div>
+		</div>
+	</body>
+</html>
