@@ -23,6 +23,7 @@ sub collect {
 		chomp $title;
 
 		my $name = $path->relative($dir);
+		$name =~ s/\.[^.]+$//;
 
 		push @$ret, Blosxom::Entry->new({
 			title => "$title",
