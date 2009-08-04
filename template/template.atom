@@ -1,0 +1,19 @@
+application/atom+xml; charset=utf-8
+
+? use DateTime;
+? use XML::Atom::Feed;
+? use XML::Atom::Entry;
+? use Text::MicroTemplate qw(encoded_string);
+? my $feed = XML::Atom::Feed->new;
+? $feed->title('Blosxom');
+? $feed->id('tag:example.com,2009:' . $blosxom->path);
+? for my $e (@{ $blosxom->{entries} }) {
+? 	my $entry = XML::Atom::Entry->new;
+? 	$entry->title($e->title);
+? 	$entry->id(sprintf('tag:example.com,%s:%s', DateTime->from_epoch(epoch => $e->time)->strftime("%Y"), $e->name));
+? 	$entry->content($e->body);
+? 	$feed->add_entry($entry);
+? }
+? 
+? my @entries = $feed->entries;
+?= encoded_string($feed->as_xml);

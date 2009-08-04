@@ -6,7 +6,7 @@ text/html; charset=utf-8
 ? use DateTime;
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
-		<title></title>
+		<title>Blosxom</title>
 		
 		<!-- <script type="text/javascript" src="/site-script.js"></script> -->
 		<style type="text/css">
@@ -97,7 +97,7 @@ text/html; charset=utf-8
 	</head>
 	<body>
 		<div id="whole">
-			<h1 id="top"><a href="/"></a></h1>
+			<h1 id="top"><a href="/">Blosxom</a></h1>
 
 			<div id="content">
 				<? for my $entry (@{ $blosxom->{entries} }) { ?>
@@ -106,7 +106,7 @@ text/html; charset=utf-8
 					<div class="entry-content"><?= encoded_string($entry->body) ?></div>
 					<dl class="information">
 						<dt>DateTime</dt>
-						<dd><?= DateTime->from_epoch(epoch => $entry->time)->strftime("%Y-%m-%d") ?></dd>
+						<dd><?= DateTime->from_epoch(epoch => $entry->time)->strftime("%Y-%m-%d %H:%M:%S") ?></dd>
 						<dt>Path</dt>
 						<dd><a href="<?= $entry->name ?>"><?= $entry->name ?></a></dd>
 					</dl>

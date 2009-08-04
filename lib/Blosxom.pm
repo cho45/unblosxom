@@ -16,9 +16,9 @@ sub dispatch {
 	my ($self, $req, $res) = @_;
 	$self->{req} = $req;
 
-	$req->path =~ /(.+)(?:\.([^.]+))?$/;
+	$req->path =~ /(.+?)(?:\.([^.]+))?$/;
 	my ($path, $flavour) = ($1, $2);
-	$path =~ /index$/;
+	$path =~ s/index$//;
 
 	$self->path($path);
 	$self->flavour($flavour || $self->config->{flavour});
@@ -69,7 +69,6 @@ sub filter_entries {
 		if ($only) {
 			$self->{entries} = [ $only ];
 		} else {
-			use Data::Dumper;
 			$self->{entries} = [
 				grep {
 					my $name = $_->name;

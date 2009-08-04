@@ -1,0 +1,5 @@
+application/x-data-dumper
+
+? use Text::MicroTemplate qw(encoded_string);
+? use JSON;
+<?= encoded_string( to_json( [ map { +{ name => $_->name } } @{ $blosxom->{entries} }, ], { allow_blessed => 1, ascii => 1 })) ?>
