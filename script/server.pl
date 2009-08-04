@@ -24,9 +24,9 @@ HTTP::Engine->new(
 
 			Blosxom::Dispatcher::HTTP->new({
 				config => {
-					flavour => "html",
+					flavour      => "html",
 					template_dir => "template",
-					FileSystem => {
+					FileSystem   => {
 						ext => "txt",
 						dir => "data"
 					},
