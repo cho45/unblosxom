@@ -1,7 +1,9 @@
 
+- HTTP リクエストをうけて適切にアプリケーションを初期化する
+-- Blosxom::Dispatcher::HTTP
+--- CLI から起動する場合もある
 - エントリーを集めてくる
--- エントリを集めてくる場所は DB にもできるように
+-- Blosxom::Collector::FileSystem
+--- エントリを集めてくる場所は DB にもできるように
 - 集めたデータを出力する
-
-- プラグイン機構
--- Class::Trigger で
+-- Text::MicroTemplate;
