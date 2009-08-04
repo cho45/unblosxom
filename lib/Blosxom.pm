@@ -12,27 +12,6 @@ use base qw(Class::Accessor::Fast);
 
 __PACKAGE__->mk_accessors(qw/config path flavour/);
 
-sub dispatch {
-	my ($self, $req, $res) = @_;
-	$self->{req} = $req;
-
-	$req->path =~ /(.+?)(?:\.([^.]+))?$/;
-	my ($path, $flavour) = ($1, $2);
-	$path =~ s/index$//;
-
-	$self->path($path);
-	$self->flavour($flavour || $self->config->{flavour});
-
-	$self->collect_entries;
-	$self->sort_entries;
-	$self->filter_entries;
-
-	my ($content_type, $content) = $self->render_entries;
-	$res->header("Content-Type" => $content_type);
-	$res->content($content);
-	$res;
-}
-
 sub collect_entries {
 	my ($self) = @_;
 	$self->{entries} = Blosxom::Collector::FileSystem->new({ config => $self->config->{FileSystem} })->collect;

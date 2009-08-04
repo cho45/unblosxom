@@ -10,8 +10,7 @@ use Perl6::Say;
 
 use HTTP::Engine;
 
-use Blosxom;
-use Blosxom::Dispatcher;
+use Blosxom::Dispatcher::HTTP;
 
 HTTP::Engine->new(
 	interface => {
@@ -23,7 +22,7 @@ HTTP::Engine->new(
 			my $req = shift;
 			my $res = HTTP::Engine::Response->new;
 
-			my $blosxom = Blosxom->new({
+			Blosxom::Dispatcher::HTTP->new({
 				config => {
 					flavour => "html",
 					template_dir => "template",
@@ -32,9 +31,7 @@ HTTP::Engine->new(
 						dir => "data"
 					},
 				}
-			});
-			
-			$blosxom->dispatch($req, $res);
+			})->dispatch($req, $res);
 		}
 	}
 )->run;
