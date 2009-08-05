@@ -18,6 +18,7 @@ sub new {
 	my $self = $class->SUPER::new($config);
 	$self->plugins([]);
 	$self->load_plugins;
+	$self->call_plugins(start => $self);
 	$self;
 }
 
@@ -67,6 +68,8 @@ sub filter_entries {
 			];
 		}
 	}
+
+	$self->call_plugins(filter => $self);
 }
 
 sub render_entries {
@@ -83,6 +86,7 @@ sub render_entries {
 	...
 
 	my $output = $renderer->($self);
+	$self->call_plugins(last => $self, $output);
 	split /\n\n/, $output, 2;
 }
 
@@ -107,6 +111,11 @@ sub call_plugins {
 		}
 	}
 	$results;
+}
+
+sub DESTROY {
+	my ($self) = @_;
+	$self->call_plugins(finish => $self);
 }
 
 1;
