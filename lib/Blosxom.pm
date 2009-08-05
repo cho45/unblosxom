@@ -7,14 +7,24 @@ use POSIX 'strftime';
 use Text::MicroTemplate;
 use Blosxom::Collector::FileSystem;
 use List::MoreUtils qw(firstval all);
+use UNIVERSAL::require;
 
 use base qw(Class::Accessor::Fast);
 
-__PACKAGE__->mk_accessors(qw/config path flavour/);
+__PACKAGE__->mk_accessors(qw/config path flavour plugins/);
+
+sub new {
+	my ($class, $config) = @_;
+	my $self = $class->SUPER::new($config);
+	$self->plugins([]);
+	$self->load_plugins;
+	$self;
+}
 
 sub collect_entries {
 	my ($self) = @_;
-	$self->{entries} = Blosxom::Collector::FileSystem->new({ config => $self->config->{FileSystem} })->collect;
+	my $results = $self->call_plugins("collect");
+	$self->{entries} = [ map { @$_ } @$results ];
 }
 
 sub sort_entries {
@@ -76,15 +86,27 @@ sub render_entries {
 	split /\n\n/, $output, 2;
 }
 
-sub plugins {
-	my ($self, $name) = @_;
-	my $ret = [];
-	for my $plugin (@{ $self->config->{$name} }) {
-		my $class = sprintf("Blosxom::%s::%s", $name, $plugin->{name});
-		$class->use or die sprintf("unknown %s: %s", $name, $plugin->{name});
-		push @$ret, $class->new($plugin->{config});
+sub load_plugins {
+	my ($self) = @_;
+	my $plugins = [];
+	for (@{ $self->config->{plugins} }) {
+		my ($name, $config) = @$_;
+		my $class = sprintf("Blosxom::%s", $name);
+		$class->use or die sprintf("unknown plugin: %s", $name);
+		push @$plugins, $class->new({ config => $config });
 	}
-	$ret;
+	$self->plugins($plugins);
+}
+
+sub call_plugins {
+	my ($self, $method, @args) = @_;
+	my $results = [];
+	for my $plugin (@{ $self->plugins }) {
+		if ($plugin->can($method)) {
+			push @$results, $plugin->$method(@args);
+		}
+	}
+	$results;
 }
 
 1;

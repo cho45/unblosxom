@@ -43,7 +43,7 @@ use Test::More tests => 30;
 use HTTP::Engine;
 use HTTP::Request;
 
-use Blosxom;
+use Blosxom::Dispatcher::HTTP;
 
 my $engine = HTTP::Engine->new(
 	interface => {
@@ -52,14 +52,16 @@ my $engine = HTTP::Engine->new(
 			my $req = shift;
 			my $res = HTTP::Engine::Response->new;
 
-			my $blosxom = Blosxom->new({
+			my $blosxom = Blosxom::Dispatcher::HTTP->new({
 				config => {
 					flavour      => "json",
 					template_dir => "$FindBin::Bin/fixtures/template",
-					FileSystem   => {
-						ext => "txt",
-						dir => "$dir"
-					},
+					plugins => [
+						[ "Collector::FileSystem" => {
+							ext => "txt",
+							dir => "$dir"
+						} ],
+					]
 				}
 			});
 			

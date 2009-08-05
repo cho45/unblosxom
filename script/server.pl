@@ -26,10 +26,12 @@ HTTP::Engine->new(
 				config => {
 					flavour      => "html",
 					template_dir => "template",
-					FileSystem   => {
-						ext => "txt",
-						dir => "data"
-					},
+					plugins => [
+						[ "Collector::FileSystem" => {
+							ext => "txt",
+							dir => "data"
+						} ],
+					]
 				}
 			})->dispatch($req, $res);
 		}
